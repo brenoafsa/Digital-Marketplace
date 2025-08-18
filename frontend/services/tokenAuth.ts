@@ -1,25 +1,41 @@
 const ACCESS_TOKEN_KEY = "accessToken"
 const REFRESH_TOKEN_KEY = "refreshToken"
 
+const setCookie = (name: string, value: string) => {
+    const expires = new Date(Date.now() + 15 * 60 * 1000).toUTCString();
+    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+};
+
+const getCookie = (name: string): string => {
+    return document.cookie.split('; ').reduce((each, index) => {
+        const parts = index.split('=');
+        return parts[0] === name ? decodeURIComponent(parts[1]) : each
+    }, "");
+};
+
+const deleteCookie = (name: string) => {
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+};
+
 const storeAccessToken = (token: string): void => {
-    localStorage.setItem(ACCESS_TOKEN_KEY, token);
+    setCookie(ACCESS_TOKEN_KEY, token);
 };
 
 const storeRefreshToken = (token: string): void => {
-    localStorage.setItem(REFRESH_TOKEN_KEY, token)
-}
+    setCookie(REFRESH_TOKEN_KEY, token);
+};
 
 const getAccessToken = (): string => {
-    return localStorage.getItem(ACCESS_TOKEN_KEY) ?? "";
-}
+    return getCookie(ACCESS_TOKEN_KEY);
+};
 
 const getRefreshToken = (): string => {
-    return localStorage.getItem(REFRESH_TOKEN_KEY) ?? "";
-}
+    return getCookie(REFRESH_TOKEN_KEY);
+};
 
 const clearAcessRefreshTokens = (): void => {
-    localStorage.removeItem(ACCESS_TOKEN_KEY);
-    localStorage.removeItem(REFRESH_TOKEN_KEY);
+    deleteCookie(ACCESS_TOKEN_KEY);
+    deleteCookie(REFRESH_TOKEN_KEY);
 };
 
 export {
