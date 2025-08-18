@@ -6,6 +6,8 @@ services:
     ports:
       - "3000:3000"
     restart: unless-stopped
+    depends_on:
+      - backend
   backend:
     build: ./backend
     command: python manage.py runserver 0.0.0.0:8000
